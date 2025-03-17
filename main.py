@@ -3,21 +3,19 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 import os
-from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+# Create directories if they don't exist
+Path("static").mkdir(exist_ok=True)
+Path("static/css").mkdir(exist_ok=True)
+Path("static/js").mkdir(exist_ok=True)
+Path("templates").mkdir(exist_ok=True)
 
 app = FastAPI(
     title="AI Agent Coder",
     description="AI Code Generation and Analysis API",
     version="1.0.0"
 )
-
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Setup templates
-templates = Jinja2Templates(directory="templates")
 
 # Add CORS middleware
 app.add_middleware(
@@ -27,6 +25,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount static files only if directory exists
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Setup templates
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 async def root():

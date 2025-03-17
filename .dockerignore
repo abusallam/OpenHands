@@ -3,3 +3,7 @@ config.toml
 .envrc
 .env
 .git
+.gitignore
+README.md
+__pycache__
+*.pyc
