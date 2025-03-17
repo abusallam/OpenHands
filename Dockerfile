@@ -55,4 +55,7 @@ RUN pip install --no-cache-dir \
 # Copy the rest of the application
 COPY . .
 
-CMD ["python", "main.py"]
+# Expose the new port
+EXPOSE 8529
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8529"]
