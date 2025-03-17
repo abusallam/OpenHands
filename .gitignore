@@ -20,6 +20,23 @@ wheels/
 .installed.cfg
 *.egg
 
+# Environment
+.env
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Database
+*.sqlite3
+
 # Virtual Environment
 venv/
 env/

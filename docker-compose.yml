@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ai_coder
-      POSTGRES_PASSWORD: internal_db_password
+      POSTGRES_PASSWORD: local_db_password
       POSTGRES_DB: ai_coder_db
     volumes:
       - internal_postgres_data:/var/lib/postgresql/data
@@ -49,13 +49,13 @@ services:
     image: redis:7-alpine
     container_name: ai_coder_internal_redis
     restart: unless-stopped
-    command: redis-server --requirepass internal_redis_password
+    command: redis-server --requirepass local_redis_password
     volumes:
       - internal_redis_data:/data
     networks:
       - ai_coder_network
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "internal_redis_password", "ping"]
+      test: ["CMD", "redis-cli", "-a", "local_redis_password", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
