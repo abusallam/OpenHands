@@ -4,12 +4,14 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from pathlib import Path
+import databases
+from dotenv import load_dotenv
 
-# Create directories if they don't exist
-Path("static").mkdir(exist_ok=True)
-Path("static/css").mkdir(exist_ok=True)
-Path("static/js").mkdir(exist_ok=True)
-Path("templates").mkdir(exist_ok=True)
+load_dotenv()
+
+# Database configuration
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/ai_coder")
+database = databases.Database(DATABASE_URL)
 
 app = FastAPI(
     title="AI Agent Coder",
@@ -32,6 +34,14 @@ if os.path.exists("static"):
 
 # Setup templates
 templates = Jinja2Templates(directory="templates")
+
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
 @app.get("/")
 async def root():

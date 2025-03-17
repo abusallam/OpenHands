@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies including PostgreSQL client
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
@@ -16,17 +16,24 @@ RUN pip install --no-cache-dir \
     python-dotenv \
     sqlalchemy \
     asyncpg \
-    alembic \
-    psycopg2-binary
+    databases \
+    psycopg2-binary \
+    jinja2 \
+    aiofiles
+
+# Create directories
+RUN mkdir -p static/css static/js templates
 
 # Copy application files
-COPY . .
-
-# Expose port
-EXPOSE 8529
+COPY static/ static/
+COPY templates/ templates/
+COPY main.py .
+COPY init.sql .
 
 # Create entrypoint script
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
+
+EXPOSE 8529
 
 ENTRYPOINT ["./entrypoint.sh"]

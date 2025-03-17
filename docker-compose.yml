@@ -1,72 +1,28 @@
 version: '3.8'
 
 services:
-  ai_coder:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: ai_coder:latest
-    container_name: ai_coder
-    restart: unless-stopped
-    env_file: .env
+  app:
+    build: .
     ports:
-      - "8529:8000"
-    depends_on:
-      internal_db:
-        condition: service_healthy
-      internal_redis:
-        condition: service_healthy
-    networks:
-      - ai_coder_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  internal_db:
-    image: postgres:15-alpine
-    container_name: ai_coder_internal_db
-    restart: unless-stopped
+      - "8529:8529"
     environment:
-      POSTGRES_USER: ai_coder
-      POSTGRES_PASSWORD: local_db_password
-      POSTGRES_DB: ai_coder_db
-    volumes:
-      - internal_postgres_data:/var/lib/postgresql/data
-    networks:
-      - ai_coder_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ai_coder"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    # Expose port only for development
-    # ports:
-    #   - "5432:5432"
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ai_coder
+      - DATABASE_HOST=db
+      - DATABASE_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DATABASE_NAME=ai_coder
+    depends_on:
+      - db
 
-  internal_redis:
-    image: redis:7-alpine
-    container_name: ai_coder_internal_redis
-    restart: unless-stopped
-    command: redis-server --requirepass local_redis_password
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ai_coder
     volumes:
-      - internal_redis_data:/data
-    networks:
-      - ai_coder_network
-    healthcheck:
-      test: ["CMD", "redis-cli", "-a", "local_redis_password", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    # Expose port only for development
-    # ports:
-    #   - "6379:6379"
-
-networks:
-  ai_coder_network:
-    driver: bridge
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
-  internal_postgres_data:
-  internal_redis_data:
+  postgres_data:
