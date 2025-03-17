@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "8000:8000"
+      - "8529:8000"
     depends_on:
       internal_db:
         condition: service_healthy
