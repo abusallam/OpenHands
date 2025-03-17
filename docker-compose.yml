@@ -1,23 +1,72 @@
+version: '3.8'
 
 services:
-  openhands:
+  ai_coder:
     build:
-      context: ./
-      dockerfile: ./containers/app/Dockerfile
-    image: openhands:latest
-    container_name: openhands-app-${DATE:-}
-    environment:
-      - SANDBOX_RUNTIME_CONTAINER_IMAGE=${SANDBOX_RUNTIME_CONTAINER_IMAGE:-docker.all-hands.dev/all-hands-ai/runtime:0.28-nikolaik}
-      #- SANDBOX_USER_ID=${SANDBOX_USER_ID:-1234} # enable this only if you want a specific non-root sandbox user but you will have to manually adjust permissions of openhands-state for this user
-      - WORKSPACE_MOUNT_PATH=${WORKSPACE_BASE:-$PWD/workspace}
+      context: .
+      dockerfile: Dockerfile
+    image: ai_coder:latest
+    container_name: ai_coder
+    restart: unless-stopped
+    env_file: .env
     ports:
-      - "3000:3000"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "8000:8000"
+    depends_on:
+      internal_db:
+        condition: service_healthy
+      internal_redis:
+        condition: service_healthy
+    networks:
+      - ai_coder_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  internal_db:
+    image: postgres:15-alpine
+    container_name: ai_coder_internal_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ai_coder
+      POSTGRES_PASSWORD: internal_db_password
+      POSTGRES_DB: ai_coder_db
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.openhands-state:/.openhands-state
-      - ${WORKSPACE_BASE:-$PWD/workspace}:/opt/workspace_base
-    pull_policy: build
-    stdin_open: true
-    tty: true
+      - internal_postgres_data:/var/lib/postgresql/data
+    networks:
+      - ai_coder_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_coder"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Expose port only for development
+    # ports:
+    #   - "5432:5432"
+
+  internal_redis:
+    image: redis:7-alpine
+    container_name: ai_coder_internal_redis
+    restart: unless-stopped
+    command: redis-server --requirepass internal_redis_password
+    volumes:
+      - internal_redis_data:/data
+    networks:
+      - ai_coder_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "internal_redis_password", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Expose port only for development
+    # ports:
+    #   - "6379:6379"
+
+networks:
+  ai_coder_network:
+    driver: bridge
+
+volumes:
+  internal_postgres_data:
+  internal_redis_data:
