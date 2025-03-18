@@ -5,118 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Agent Coder - Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen">
-        <!-- Sidebar -->
-        <aside class="fixed inset-y-0 left-0 bg-white shadow-lg w-64">
-            <div class="flex flex-col h-full">
-                <div class="flex items-center justify-center h-16 bg-gray-800">
-                    <h1 class="text-white text-xl font-bold">AI Agent Coder</h1>
-                </div>
-                <nav class="flex-1 overflow-y-auto">
-                    <ul class="p-4">
-                        <li class="mb-2">
-                            <a href="#dashboard" class="block px-4 py-2 rounded hover:bg-gray-100">Dashboard</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#users" class="block px-4 py-2 rounded hover:bg-gray-100">Users</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#settings" class="block px-4 py-2 rounded hover:bg-gray-100">Settings</a>
-                        </li>
-                    </ul>
-                </nav>
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4">
+                <h1 class="text-3xl font-bold text-gray-900">
+                    AI Agent Coder Dashboard
+                </h1>
             </div>
-        </aside>
-
-        <!-- Main content -->
-        <main class="ml-64 p-8">
-            <!-- Dashboard section -->
-            <div id="dashboard-section">
-                <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-lg font-semibold mb-2">Total Users</h3>
-                        <p class="text-3xl font-bold" id="total-users">0</p>
+        </header>
+        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="px-4 py-6 sm:px-0">
+                <div class="border-4 border-dashed border-gray-200 rounded-lg h-96">
+                    <!-- Dashboard content will go here -->
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold">Welcome to AI Agent Coder</h2>
+                        <p class="mt-2">Your dashboard is ready.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-lg font-semibold mb-2">Active Sessions</h3>
-                        <p class="text-3xl font-bold" id="active-sessions">0</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-lg font-semibold mb-2">API Requests</h3>
-                        <p class="text-3xl font-bold" id="api-requests">0</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Users section -->
-            <div id="users-section" class="hidden mt-8">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-bold">Users</h2>
-                    <button onclick="showAddUserModal()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        Add User
-                    </button>
-                </div>
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <table class="min-w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Users will be populated here -->
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </main>
     </div>
-
-    <!-- Add User Modal -->
-    <div id="add-user-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
-        <div class="flex items-center justify-center min-h-screen">
-            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                <h3 class="text-xl font-bold mb-4">Add New User</h3>
-                <form id="add-user-form">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                            Username
-                        </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                               id="username" type="text" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-                            Email
-                        </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                               id="email" type="email" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">
-                            <input type="checkbox" id="is-admin"> Is Admin
-                        </label>
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="button" onclick="hideAddUserModal()" class="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800">
-                            Cancel
-                        </button>
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            Add User
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script src="/static/js/dashboard.js"></script>
 </body>
 </html> 

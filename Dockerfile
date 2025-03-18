@@ -14,16 +14,20 @@ RUN pip install --no-cache-dir \
     fastapi==0.109.0 \
     uvicorn==0.27.0 \
     python-dotenv==1.0.0 \
-    sqlalchemy==1.4.42 \
+    sqlalchemy==2.0.25 \
     asyncpg==0.29.0 \
-    databases==0.8.0 \
+    databases[postgresql]==0.9.0 \
     psycopg2-binary==2.9.9 \
     passlib[bcrypt]==1.7.4 \
     PyJWT==2.8.0 \
+    cryptography==42.0.0 \
     python-jose[cryptography]==3.3.0 \
     jinja2==3.1.2 \
     aiofiles==23.2.1 \
     python-multipart==0.0.6
+
+# Verify JWT installation
+RUN python -c "import jwt; print('JWT successfully installed')"
 
 # Create directories
 RUN mkdir -p static/css static/js templates
@@ -33,9 +37,6 @@ COPY static/ static/
 COPY templates/ templates/
 COPY main.py .
 COPY init.sql .
-
-# Verify JWT installation
-RUN python -c "import jwt; print('JWT package installed successfully')"
 
 # Set environment variables
 ENV ADMIN_USERNAME=${ADMIN_USERNAME:-admin}

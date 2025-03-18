@@ -13,8 +13,6 @@ echo "PostgreSQL is up - checking database"
 if ! PGPASSWORD=$POSTGRES_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -lqt | cut -d \| -f 1 | grep -qw ai_coder; then
     echo "Creating database ai_coder"
     PGPASSWORD=$POSTGRES_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -c "CREATE DATABASE ai_coder;"
-else
-    echo "Database ai_coder already exists"
 fi
 
 # Connect to ai_coder database and create tables
