@@ -1,8 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../auth/AuthContext'; // Assuming you have an auth context
-import { Chart } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
 import { UserStats, ProjectStats, AIStats } from '../types'; // You'll need to define these types
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -133,12 +155,13 @@ const AdminDashboard = () => {
                 </div>
                 <div className="bg-gray-800 p-6 rounded-lg">
                   <h3>Success Rate</h3>
-                  <Doughnut 
+                  <Bar 
                     data={stats.aiMetrics.successRateData}
                     options={{
                       responsive: true,
-                      plugins: {
-                        legend: { position: 'bottom' }
+                      scales: {
+                        y: { grid: { color: '#374151' } },
+                        x: { grid: { color: '#374151' } }
                       }
                     }}
                   />
