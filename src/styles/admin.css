@@ -1,0 +1,20 @@
+.nav-link {
+  @apply flex items-center p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white transition-colors;
+}
+
+.stat-card {
+  @apply bg-gray-800 p-6 rounded-lg hover:bg-gray-750 transition-colors;
+}
+
+.stat-card h3 {
+  @apply text-gray-400 mb-2;
+}
+
+.chart-container {
+  @apply bg-gray-800 p-6 rounded-lg;
+}
+
+/* Dark theme overrides for charts */
+.chart-container canvas {
+  @apply !text-gray-300;
+} 
