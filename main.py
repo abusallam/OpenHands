@@ -183,10 +183,30 @@ async def create_admin_user():
         except Exception as e:
             print(f"Error creating admin user: {e}")
 
+# Database initialization
+async def init_db():
+    try:
+        await database.connect()
+        # Create admin user if doesn't exist
+        query = users.select().where(users.c.username == ADMIN_USERNAME)
+        admin_exists = await database.fetch_one(query)
+        
+        if not admin_exists:
+            hashed_password = pwd_context.hash(ADMIN_PASSWORD)
+            query = users.insert().values(
+                username=ADMIN_USERNAME,
+                email=ADMIN_EMAIL,
+                hashed_password=hashed_password,
+                is_admin=True
+            )
+            await database.execute(query)
+            print(f"Admin user created: {ADMIN_USERNAME}")
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+
 @app.on_event("startup")
 async def startup():
-    await database.connect()
-    await create_admin_user()
+    await init_db()
 
 @app.on_event("shutdown")
 async def shutdown():
