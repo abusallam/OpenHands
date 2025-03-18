@@ -8,12 +8,18 @@ import databases
 import sqlalchemy
 from datetime import datetime, timedelta
 from typing import Optional
-import jwt
+
+# JWT imports
+try:
+    import jwt
+except ImportError:
+    raise ImportError("PyJWT is not installed. Please install it using 'pip install PyJWT'")
+
+from dotenv import load_dotenv
 from passlib.context import CryptContext
 from pydantic import BaseModel
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
 load_dotenv()
 
