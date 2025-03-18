@@ -9,12 +9,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python packages with specific versions
+# Install Python packages with compatible versions
 RUN pip install --no-cache-dir \
     fastapi==0.109.0 \
     uvicorn==0.27.0 \
     python-dotenv==1.0.0 \
-    sqlalchemy==2.0.25 \
+    sqlalchemy==1.4.42 \
     asyncpg==0.29.0 \
     databases==0.8.0 \
     psycopg2-binary==2.9.9 \
